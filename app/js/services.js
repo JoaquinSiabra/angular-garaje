@@ -2,7 +2,7 @@
 
 /* Services */
 
-var phonecatServices = angular.module('phonecatServices', ['ngResource']);
+var garajeServices = angular.module('garajeServices', ['ngResource']);
 
 /*phonecatServices.factory('Phone', ['$resource',
   function($resource){
@@ -10,25 +10,25 @@ var phonecatServices = angular.module('phonecatServices', ['ngResource']);
   }]);*/
   
   
-phonecatServices.factory('Proyectos', ['$resource',
+garajeServices.factory('Proyectos', ['$resource',
   function($resource){
-    return $resource('http://localhost/garaje/api/index.php/proyectos',
+    return $resource('http://localhost/garaje/api/index.php/proyectos', {},
 					{query: {method:'GET', isArray:true}});
   }]);
 
-  phonecatServices.factory('Images', ['$resource',
+  garajeServices.factory('Images', ['$resource',
   function($resource){  
-    return $resource('http://localhost/garaje/api/index.php/imagenes/:proyectoId',
+    return $resource('http://localhost/garaje/api/index.php/imagenes/:proyectoId', {},
 					{query: {method:'GET', isArray:true}});
   }]);
   
-phonecatServices.factory('Proyecto', ['$resource',
+garajeServices.factory('Proyecto', ['$resource',
   function($resource){
     return $resource('http://localhost/garaje/api/index.php/proyectos/:proyectoId', {}, {
-      query: {method:'GET', isArray:true},
+      query: {method:'GET', isArray: false},
 	  create: {method:'POST'},
-      update: {method:'PUT',params: {proyectoId: '@proyectoId'}},
-      remove: {method:'DELETE'}
+      update: {method:'PUT', params: {proyectoId: '@proyectoId'}},
+      remove: {method:'DELETE', params: {proyectoId: '@proyectoId'}}
     });
   }]);
 

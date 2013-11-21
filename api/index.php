@@ -99,12 +99,13 @@ function updateProyecto($id) {
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql);  
+		$stmt->bindParam("id", $id);
 		$stmt->bindParam("estaActivo", $proyecto->estaActivo);
 		$stmt->bindParam("nombre", $proyecto->nombre);
 		$stmt->bindParam("comentarios", $proyecto->comentarios);
 		$stmt->execute();
 		$db = null;
-		echo json_encode($phone); 
+		echo json_encode($proyecto); 
 	} catch(PDOException $e) {
 		echo '{"error":{"text":'.	$body .'Update Error '.  $e->getMessage() .'}}'; 
 	}
