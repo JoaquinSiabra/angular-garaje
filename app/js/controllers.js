@@ -22,4 +22,11 @@ phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams', 'Pr
     $scope.setImage = function(imageUrl) {
       $scope.mainImageUrl = imageUrl;
     }
+	
+	$scope.update = function() {
+		console.log($scope.proyecto);
+		$scope.proyecto.$update({proyectoId: $routeParams.proyectoId});
+		//Proyecto.update({proyectoId: $routeParams.proyectoId}); 
+	}
+	
   }]);

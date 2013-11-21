@@ -27,7 +27,7 @@ function getProyectos() {
 		$db = null;
 		echo  json_encode($phones);
 	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+		echo '{"error":{"text":'.'Reading Error '. $e->getMessage() .'}}'; 
 	}
 }
 
@@ -42,7 +42,7 @@ function getProyecto($id) {
 		$db = null;
 		echo json_encode($phone); 
 	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+		echo '{"error":{"text":'.'Reading Error '. $e->getMessage() .'}}'; 
 	}
 }
 
@@ -67,7 +67,7 @@ function addProyecto() {
 	error_log('addProyecto\n', 3, 'php.log');
 	$request = Slim::getInstance()->request();
 	$phone = json_decode($request->getBody());
-	$sql = "INSERT INTO phone(additionalFeatures, android, battery, description, id, name) VALUES (:additionalFeatures, :android, :battery, :description, :id, :name)";
+	$sql = "INSERT INTO phone(additionalFeatures, android, battery, description, idProyecto, name) VALUES (:additionalFeatures, :android, :battery, :description, :id, :name)";
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql);  
@@ -91,26 +91,27 @@ function addProyecto() {
 function updateProyecto($id) {
 	$request = Slim::getInstance()->request();
 	$body = $request->getBody();
-	$phone= json_decode($body);
-	$sql = "UPDATE phone SET additionalFeatures=:additionalFeatures, android=:android, battery=:battery, description=:description, name=:name WHERE id=:id";
+	$proyecto= json_decode($body);
+	$sql = "UPDATE garaje_proyecto 
+		SET estaActivo=:estaActivo,
+		nombre=:nombre, comentarios=:comentarios 
+		WHERE idProyecto=:id";
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql);  
-		$stmt->bindParam("additionalFeatures", $phone->additionalFeatures);
-		$stmt->bindParam("android", $phone->android);
-		$stmt->bindParam("battery", $phone->battery);
-		$stmt->bindParam("description", $phone->description);
-		$stmt->bindParam("name", $phone->name);
+		$stmt->bindParam("estaActivo", $proyecto->estaActivo);
+		$stmt->bindParam("nombre", $proyecto->nombre);
+		$stmt->bindParam("comentarios", $proyecto->comentarios);
 		$stmt->execute();
 		$db = null;
 		echo json_encode($phone); 
 	} catch(PDOException $e) {
-		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+		echo '{"error":{"text":'.	$body .'Update Error '.  $e->getMessage() .'}}'; 
 	}
 }
 
 function deleteProyecto($id) {
-	$sql = "DELETE FROM phone WHERE id=:id";
+	$sql = "DELETE FROM garaje_proyecto WHERE idProyecto=:id";
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql);  
@@ -140,9 +141,9 @@ function findByName($query) {
 
 function getConnection() {
 	$dbhost="127.0.0.1";
-	$dbuser="USER";
-	$dbpass="PASWWORD";
-	$dbname="DATABASE";
+	$dbuser="root";
+	$dbpass="pmcchs2012";
+	$dbname="test";
 	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);	
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	return $dbh;

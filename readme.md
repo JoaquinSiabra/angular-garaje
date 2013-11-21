@@ -11,11 +11,7 @@ Connection to database has been added using Slim as shown in https://github.com/
 
 ### Git
 
-### Node.js (for testing)
-
-### php (for Slim)
-
-### MySQL (for Slim)
+### Node.js
 
 
 FROM THE ORIGINAL AngularJS Phone Catalog Tutorial Application

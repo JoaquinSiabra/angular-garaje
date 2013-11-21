@@ -25,7 +25,10 @@ phonecatServices.factory('Proyectos', ['$resource',
 phonecatServices.factory('Proyecto', ['$resource',
   function($resource){
     return $resource('http://localhost/garaje/api/index.php/proyectos/:proyectoId', {}, {
-      query: {method:'GET', isArray:true}
+      query: {method:'GET', isArray:true},
+	  create: {method:'POST'},
+      update: {method:'PUT',params: {proyectoId: '@proyectoId'}},
+      remove: {method:'DELETE'}
     });
   }]);
 
