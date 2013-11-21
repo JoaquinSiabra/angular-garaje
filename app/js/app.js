@@ -2,24 +2,24 @@
 
 /* App Module */
 
-var phonecatApp = angular.module('phonecatApp', [
+var garajeApp = angular.module('garajeApp', [
   'ngRoute',
-  'phonecatAnimations',
-  'phonecatControllers',
-  'phonecatFilters',
-  'phonecatServices'
-]);
+  'garajeAnimations',
+  'garajeControllers',
+  'garajeFilters',
+  'garajeServices'
+]); 
 
-phonecatApp.config(['$routeProvider',
+garajeApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/proyectos', {
-        templateUrl: 'partials/phone-list.html',
-        controller: 'PhoneListCtrl'
+        templateUrl: 'partials/proyecto-list.html',
+        controller: 'ProyectoListCtrl'
       }).
       when('/proyectos/:proyectoId', {
-        templateUrl: 'partials/phone-detail.html',
-        controller: 'PhoneDetailCtrl'
+        templateUrl: 'partials/proyecto-detail.html',
+        controller: 'ProyectoDetailCtrl'
       }).
       otherwise({
         redirectTo: '/proyectos'
