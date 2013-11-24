@@ -19,11 +19,12 @@
  <div >
  
 	<form novalidate class="simple-form">
-		IdProyecto: <input type="text" ng-model="proyecto.idProyecto" /><br />
 		Nombre: <input type="text" ng-model="proyecto.nombre" /><br />
+		Imagen: http://<input type="text" ng-model="proyecto.urlImagen" /><button ng-click="addImage(proyecto);">AÑADIR</button><br />
 		Activo: <input type="text" ng-model="proyecto.estaActivo" /><br />
+		Descripcion: <input type="text" ng-model="proyecto.descripcion" /><br />
 		Comentarios: <input type="text" ng-model="proyecto.comentarios" /><br />			
-		<button ng-click="update(proyecto)">SAVE</button><button ng-click="delete(proyecto);goNext('/proyectos')">DELETE</button>
+		<button ng-click="update(proyecto);goNext('/proyectos')">SAVE</button><button ng-click="deletes(proyecto);goNext('/proyectos')">DELETE</button>
 	</form>
 </div>
 

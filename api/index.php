@@ -8,6 +8,7 @@ $app->get('/proyectos', 'getProyectos');
 $app->get('/proyectos/:id',	'getProyecto');
 $app->get('/imagenes/:id',	'getImagenes');
 $app->get('/proyectos/search/:query', 'findByName');
+$app->post('/imagenes', 'addImage');
 $app->post('/proyectos', 'addProyecto');
 $app->put('/proyectos/:id', 'updateProyecto');
 $app->delete('/proyectos/:id','deleteProyecto');
@@ -23,9 +24,11 @@ function getProyectos() {
 	try {
 		$db = getConnection();
 		$stmt = $db->query($sql);  
-		$phones = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$proyectos = $stmt->fetchAll(PDO::FETCH_OBJ);
 		$db = null;
-		echo  json_encode($phones);
+		
+		echo  json_encode($proyectos);
+		
 	} catch(PDOException $e) {
 		echo '{"error":{"text":'.'Reading Error '. $e->getMessage() .'}}'; 
 	}
@@ -38,9 +41,11 @@ function getProyecto($id) {
 		$stmt = $db->prepare($sql);  
 		$stmt->bindParam("id", $id);
 		$stmt->execute();
-		$phone = $stmt->fetchObject();  
+		$proyecto = $stmt->fetchObject();  
 		$db = null;
-		echo json_encode($phone); 
+		
+		echo json_encode($proyecto); 
+		
 	} catch(PDOException $e) {
 		echo '{"error":{"text":'.'Reading Error '. $e->getMessage() .'}}'; 
 	}
@@ -56,7 +61,9 @@ function getImagenes($id) {
 		$stmt->execute(); 	
 		$images = $stmt->fetchAll(PDO::FETCH_OBJ);
 		$db = null;
+		
 		echo  json_encode($images);
+		
 	} catch(PDOException $e) {
 		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
 	}
@@ -66,22 +73,29 @@ function getImagenes($id) {
 function addProyecto() {
 	error_log('addProyecto\n', 3, 'php.log');
 	$request = Slim::getInstance()->request();
-	$phone = json_decode($request->getBody());
-	$sql = "INSERT INTO phone(additionalFeatures, android, battery, description, idProyecto, name) VALUES (:additionalFeatures, :android, :battery, :description, :id, :name)";
+	$proyecto = json_decode($request->getBody());
+	$sql = "INSERT INTO garaje_proyecto(nombre, estaActivo, descripcion, comentarios) 
+		   VALUES (:nombre, :estaActivo, :descripcion,:comentarios)";
+	$sqlImagen = "INSERT INTO garaje_imagenproyecto(idProyecto, numImagen, principal) 
+		   VALUES (:idProyecto, '1', '1')";
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql);  
-		$stmt->bindParam("additionalFeatures", $phone->additionalFeatures);
-		$stmt->bindParam("android", $phone->android);
-		$stmt->bindParam("battery", $phone->battery);
-		$stmt->bindParam("description", $phone->description);
-		$stmt->bindParam("id", $phone->id);
-		$stmt->bindParam("name", $phone->name);
-	
+		$stmt->bindParam("nombre", $proyecto->nombre);
+		$stmt->bindParam("estaActivo", $proyecto->estaActivo);
+		$stmt->bindParam("descripcion", $proyecto->descripcion);
+		$stmt->bindParam("comentarios", $proyecto->comentarios);
 		$stmt->execute();
-		$phone->id = $db->lastInsertId();
+		
+		$proyecto->idProyecto = $db->lastInsertId();		
+		$stmt = $db->prepare($sqlImagen);  
+		$stmt->bindParam("idProyecto", $proyecto->idProyecto);
+		$stmt->execute();		
+		
 		$db = null;
-		echo json_encode($phone); 
+
+		echo json_encode($proyecto); 
+		
 	} catch(PDOException $e) {
 		error_log($e->getMessage(), 3, 'php.log');
 		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
@@ -105,7 +119,9 @@ function updateProyecto($id) {
 		$stmt->bindParam("comentarios", $proyecto->comentarios);
 		$stmt->execute();
 		$db = null;
+		
 		echo json_encode($proyecto); 
+		
 	} catch(PDOException $e) {
 		echo '{"error":{"text":'.	$body .'Update Error '.  $e->getMessage() .'}}'; 
 	}
@@ -119,6 +135,7 @@ function deleteProyecto($id) {
 		$stmt->bindParam("id", $id);
 		$stmt->execute();
 		$db = null;
+		
 	} catch(PDOException $e) {
 		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
 	}
@@ -132,10 +149,47 @@ function findByName($query) {
 		$query = "%".$query."%";  
 		$stmt->bindParam("query", $query);
 		$stmt->execute();
-		$phones= $stmt->fetchAll(PDO::FETCH_OBJ);
+		$proyectos = $stmt->fetchAll(PDO::FETCH_OBJ);
 		$db = null;
-		echo  json_encode($phones);
+		
+		echo  json_encode($proyectos);
+		
 	} catch(PDOException $e) {
+		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+	}
+}
+
+
+
+function addImage() {
+	error_log('addImage\n', 3, 'php.log');
+	$request = Slim::getInstance()->request();
+	$proyecto = json_decode($request->getBody());
+	
+	$sqlMaxNumImagen = "SELECT max(numImagen) numMax FROM `garaje_imagenproyecto` WHERE idProyecto=:idProyecto";
+	$sqlImagen = "INSERT INTO garaje_imagenproyecto(idProyecto, numImagen, URLImagen, principal) 
+				  VALUES (:idProyecto, :numImagen, :URLImagen, '1')";
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sqlMaxNumImagen);  
+		$stmt->bindParam("idProyecto", $id);	
+		$stmt->execute();		
+		$numMax = $stmt->fetchObject(); 
+		if ($numMax->numMax === null){
+			$numMax->numMax = 0;
+		}
+		
+		$stmt = $db->prepare($sqlImagen);  
+		$stmt->bindParam("idProyecto", $proyecto->idProyecto);
+		$stmt->bindParam("numImagen", $numMax->numMax+1);
+		$stmt->bindParam("URLImagen", $proyecto->URLImagen);
+		$stmt->execute();
+		$db = null;
+
+		echo json_encode($proyecto); 
+		
+	} catch(PDOException $e) {
+		error_log($e->getMessage(), 3, 'php.log');
 		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
 	}
 }
