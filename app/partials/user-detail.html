@@ -1,0 +1,26 @@
+<div class="phone-images">
+  <img ng-src="{{user.imagen}}">
+</div>
+
+<h1>{{user.username}}</h1>
+
+<p>{{user.bio}}</p>
+
+ <div >
+ 
+	<form novalidate class="simple-form">
+		Nombre: <input type="text" ng-model="user.nombre" /><br />
+		Apellidos: <input type="text" ng-model="user.apellidos" /><br />
+		Email: <input type="text" ng-model="user.email" /><br />
+		Bio: <textarea col="10" rows="5" style="resize:none" ng-model="user.bio" /></textarea><br />
+		Username: <input type="text" ng-model="user.username" /><br />		
+		Password: <input type="password" ng-model="user.password" /><br />			
+		<button ng-click="update(user);">SAVE</button><button ng-click="deletes(user);goNext('/users')">DELETE</button>
+	</form>
+</div>
+
+</form>
+
+
+
+

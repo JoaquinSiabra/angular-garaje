@@ -7,7 +7,8 @@ var garajeApp = angular.module('garajeApp', [
   'garajeAnimations',
   'garajeControllers',
   'garajeFilters',
-  'garajeServices'
+  'garajeServices',
+  'garajeDirectives'
 ]); 
 
 garajeApp.config(['$routeProvider',
@@ -17,9 +18,25 @@ garajeApp.config(['$routeProvider',
         templateUrl: 'partials/proyecto-list.html',
         controller: 'ProyectoListCtrl'
       }).
+	  when('/proyectos/new', {
+        templateUrl: 'partials/proyecto-detail.html',
+        controller: 'ProyectoNewCtrl'
+      }).
       when('/proyectos/:proyectoId', {
         templateUrl: 'partials/proyecto-detail.html',
         controller: 'ProyectoDetailCtrl'
+      }).
+	  when('/users', {
+        templateUrl: 'partials/user-list.html',
+        controller: 'UserListCtrl'
+      }).
+	  when('/users/new', {
+        templateUrl: 'partials/user-detail.html',
+        controller: 'UserNewCtrl'
+      }).
+	   when('/users/:userId', {
+        templateUrl: 'partials/user-detail.html',
+        controller: 'UserDetailCtrl'
       }).
       otherwise({
         redirectTo: '/proyectos'
