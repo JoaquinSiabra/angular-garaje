@@ -1,0 +1,32 @@
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span2">
+      <!--Sidebar content-->
+
+      Search: <input ng-model="query">
+      Sort by:
+      <select ng-model="orderProp">
+        <option value="username">Username</option>
+        <option value="apellidos">Apellidos</option>
+      </select>
+	  
+	  <button go-click="/users/new/">Nuevo Usuario</button>
+	  <a href="#/proyectos/">Proyectos</a>
+
+    </div>
+    <div class="span10">
+      <!--Body content-->
+		
+	  <h1>Usuarios</h1>
+      <ul class="phones">
+        <li ng-repeat="user in users | filter:query | orderBy:orderProp"
+            class="thumbnail phone-listing">
+          <a href="#/users/{{user.idUser}}" class="thumb"><img ng-src="{{user.imagen}}"></a>
+		  <a href="#/users/{{user.idUser}}">{{user.username}}</a><br><br>
+		  {{user.bio}}
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</div>
