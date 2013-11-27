@@ -53,7 +53,7 @@ function getProyecto($id) {
 
 
 function getImagenes($id) {
-	$sql = "SELECT * FROM garaje_imagenproyecto WHERE idProyecto=:id";
+	$sql = "SELECT * FROM garaje_imagenproyecto WHERE idProyecto=:id ORDER BY principal DESC, numImagen ASC";
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql); 

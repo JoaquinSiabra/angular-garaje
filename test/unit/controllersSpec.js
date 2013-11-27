@@ -15,6 +15,36 @@ describe('Controllers de Users', function() {
   beforeEach(module('garajeApp'));
   beforeEach(module('garajeServices'));
 
+    
+  //-----------------------------------------------------------------------
+  describe('UsuarioListCtrl', function(){
+    var scope, ctrl, $httpBackend;
+
+    beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
+      //Llamadas que el controlador debería hacer al servicio
+	  $httpBackend = _$httpBackend_;
+      $httpBackend.expectGET('http://localhost/garaje/api/userAPI.php/users').
+          respond([{nombre: 'user1'}, {nombre: 'user2'}]);
+
+	  //Configuracion del controlador
+      scope = $rootScope.$new();
+      ctrl = $controller('UserListCtrl', {$scope: scope});
+    }));
+
+
+    it('should get a list with 2 users fetched from xhr', function() {
+      expect(scope.users).toEqualData([]);
+      $httpBackend.flush();
+
+      expect(scope.users).toEqualData(
+          [{nombre: 'user1'}, {nombre: 'user2'}]);
+    });
+
+    it('should set the default value of orderProp model', function() {
+      expect(scope.orderProp).toBe('username');
+    });
+	
+  });
   
    //-----------------------------------------------------------------
   describe('ProyectoDetailCtrl_AddImage', function(){
@@ -34,8 +64,8 @@ describe('Controllers de Users', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, $routeParams, $controller) {
       //Llamadas que el controlador debería hacer al servicio
  	  $httpBackend = _$httpBackend_;
-	  $httpBackend.expectGET('http://localhost/garaje/api/index.php/proyectos/1').respond(unProyecto());
-	  $httpBackend.expectGET('http://localhost/garaje/api/index.php/imagenes/1').respond(unasImagenesDelProyecto());
+	  $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/proyectos/1').respond(unProyecto());
+	  $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/imagenes/1').respond(unasImagenesDelProyecto());
 	 
 	  //Configuracion del controlador
       $routeParams.proyectoId = '1';
@@ -49,7 +79,7 @@ describe('Controllers de Users', function() {
 	  
 	  expect(scope.proyecto).toEqualData(unProyecto()); 	  
 	  
-	  $httpBackend.expectPOST('http://localhost/garaje/api/index.php/imagenes').respond({});
+	  $httpBackend.expectPOST('http://localhost/garaje/api/proyectoAPI.php/imagenes').respond({});
 	  scope.addImage();
       $httpBackend.flush();	  
       
@@ -156,7 +186,7 @@ describe('Controllers de Users', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
       //Llamadas que el controlador debería hacer al servicio
 	  $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('http://localhost/garaje/api/index.php/proyectos').
+      $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/proyectos').
           respond([{nombre: 'Proyecto1'}, {nombre: 'Proyecto2'}]);
 
 	  //Configuracion del controlador
@@ -174,7 +204,7 @@ describe('Controllers de Users', function() {
     });
 
     it('should set the default value of orderProp model', function() {
-      expect(scope.orderProp).toBe('age');
+      expect(scope.orderProp).toBe('nombre');
     });
 	
   });
@@ -193,8 +223,8 @@ describe('Controllers de Users', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, $routeParams, $controller) {
       //Llamadas que el controlador debería hacer al servicio
  	  $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('http://localhost/garaje/api/index.php/proyectos/1').respond(unProyecto());
-	  $httpBackend.expectGET('http://localhost/garaje/api/index.php/imagenes/1').respond(unasImagenesDelProyecto());
+      $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/proyectos/1').respond(unProyecto());
+	  $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/imagenes/1').respond(unasImagenesDelProyecto());
 
 	  //Configuracion del controlador
       $routeParams.proyectoId = '1';
@@ -255,7 +285,7 @@ describe('Controllers de Proyectos', function() {
   	  
 	  scope.proyecto = unProyecto();
 	  
-	  $httpBackend.expectPOST('http://localhost/garaje/api/index.php/proyectos').respond({});
+	  $httpBackend.expectPOST('http://localhost/garaje/api/proyectoAPI.php/proyectos').respond({});
 	  scope.update();
       $httpBackend.flush();	  
       
@@ -282,8 +312,8 @@ describe('Controllers de Proyectos', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, $routeParams, $controller) {
       //Llamadas que el controlador debería hacer al servicio
  	  $httpBackend = _$httpBackend_;
-	  $httpBackend.expectGET('http://localhost/garaje/api/index.php/proyectos/1').respond(unProyecto());
-	  $httpBackend.expectGET('http://localhost/garaje/api/index.php/imagenes/1').respond(unasImagenesDelProyecto());
+	  $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/proyectos/1').respond(unProyecto());
+	  $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/imagenes/1').respond(unasImagenesDelProyecto());
 	 
 	  //Configuracion del controlador
       $routeParams.proyectoId = '1';
@@ -298,7 +328,7 @@ describe('Controllers de Proyectos', function() {
 	  expect(scope.proyecto).toEqualData(unProyecto()); 	  
 	  scope.proyecto.nombre = 'NombreModificado';
 	  
-	  $httpBackend.expectPUT('http://localhost/garaje/api/index.php/proyectos/1').respond({});
+	  $httpBackend.expectPUT('http://localhost/garaje/api/proyectoAPI.php/proyectos/1').respond({});
 	  scope.update();
       $httpBackend.flush();	  
       
@@ -328,9 +358,9 @@ describe('Controllers de Proyectos', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, $routeParams, $controller) {
       //Llamadas que el controlador debería hacer al servicio
  	  $httpBackend = _$httpBackend_;
-	  $httpBackend.expectGET('http://localhost/garaje/api/index.php/proyectos/1').respond(unProyecto());
-	  $httpBackend.expectGET('http://localhost/garaje/api/index.php/imagenes/1').respond(unasImagenesDelProyecto());
-	  $httpBackend.expectDELETE('http://localhost/garaje/api/index.php/proyectos/1').respond({});
+	  $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/proyectos/1').respond(unProyecto());
+	  $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/imagenes/1').respond(unasImagenesDelProyecto());
+	  $httpBackend.expectDELETE('http://localhost/garaje/api/proyectoAPI.php/proyectos/1').respond({});
 	 
 	
 	  //Configuracion del controlador
@@ -357,7 +387,7 @@ describe('Controllers de Proyectos', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, $controller) {
       //Llamadas que el controlador debería hacer al servicio
 	  $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('http://localhost/garaje/api/index.php/proyectos').
+      $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/proyectos').
           respond([{nombre: 'Proyecto1'}, {nombre: 'Proyecto2'}]);
 
 	  //Configuracion del controlador
@@ -375,7 +405,7 @@ describe('Controllers de Proyectos', function() {
     });
 
     it('should set the default value of orderProp model', function() {
-      expect(scope.orderProp).toBe('age');
+      expect(scope.orderProp).toBe('nombre');
     });
 	
   });
@@ -394,8 +424,8 @@ describe('Controllers de Proyectos', function() {
     beforeEach(inject(function(_$httpBackend_, $rootScope, $routeParams, $controller) {
       //Llamadas que el controlador debería hacer al servicio
  	  $httpBackend = _$httpBackend_;
-      $httpBackend.expectGET('http://localhost/garaje/api/index.php/proyectos/1').respond(unProyecto());
-	  $httpBackend.expectGET('http://localhost/garaje/api/index.php/imagenes/1').respond(unasImagenesDelProyecto());
+      $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/proyectos/1').respond(unProyecto());
+	  $httpBackend.expectGET('http://localhost/garaje/api/proyectoAPI.php/imagenes/1').respond(unasImagenesDelProyecto());
 
 	  //Configuracion del controlador
       $routeParams.proyectoId = '1';

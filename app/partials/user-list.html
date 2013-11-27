@@ -1,32 +1,36 @@
 <div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span2">
-      <!--Sidebar content-->
 
-      Search: <input ng-model="query">
-      Sort by:
-      <select ng-model="orderProp">
-        <option value="username">Username</option>
-        <option value="apellidos">Apellidos</option>
-      </select>
-	  
-	  <button go-click="/users/new/">Nuevo Usuario</button>
-	  <a href="#/proyectos/">Proyectos</a>
+	<div class="row-fluid">
+		<div class="span12">
+			 <a href="#/principal/">Principal</a>	 
+			 <a href="#/proyectos/">Proyectos</a>	
+			 <a href="#/users/">Usuarios</a>
+			<a href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a>			 			 
+		</div>    
+	</div>
 
-    </div>
-    <div class="span10">
-      <!--Body content-->
+	<div class="row-fluid">
+		<div class="span2">
+		  Search: <input ng-model="query">
+		  Sort by:
+		  <select ng-model="orderProp">
+			<option value="username">Username</option>
+			<option value="apellidos">Apellidos</option>
+		  </select>	  		
+		</div>
 		
-	  <h1>Usuarios</h1>
-      <ul class="phones">
-        <li ng-repeat="user in users | filter:query | orderBy:orderProp"
-            class="thumbnail phone-listing">
-          <a href="#/users/{{user.idUser}}" class="thumb"><img ng-src="{{user.imagen}}"></a>
-		  <a href="#/users/{{user.idUser}}">{{user.username}}</a><br><br>
-		  {{user.bio}}
-        </li>
-      </ul>
+		<div class="span10">
+		  <h1>Usuarios</h1>
+		  <ul class="phones">
+			<li ng-repeat="user in users | filter:query | orderBy:orderProp"
+				class="thumbnail phone-listing">
+			  <p class="thumb"><img ng-src="{{user.imagen}}"></p>
+			  <!--a href="#/users/{{user.idUser}}" class="thumb"><img ng-src="{{user.imagen}}"></a-->
+			  <h2>{{user.username}}</h2>
+			  {{user.bio}}
+			</li>
+		  </ul>
+		</div>
+	</div>
 
-    </div>
-  </div>
 </div>

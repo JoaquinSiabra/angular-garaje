@@ -1,18 +1,41 @@
 'use strict';
 
-/* Controllers */
-
 var garajeControllers = angular.module('garajeControllers', []);
 
-garajeControllers.controller('ProyectoListCtrl', ['$scope', 'Proyectos',
-  function($scope, Proyectos, $http) {
-    $scope.proyectos = Proyectos.query();
-    $scope.orderProp = 'age';
+garajeControllers.controller('PrincipalCtrl', ['$scope', '$location','Auth',
+  function($scope, $location,  Auth) {
 
-}]);
+	$scope.userSesion = garajeApp.getUserSesion();
+	
+	$scope.logged = function() {
+			return $scope.userSesion.username !== undefined;	
+	};
+	$scope.logout = function() {
+			garajeApp.removeUserSesion();
+			$scope.userSesion = garajeApp.getUserSesion();	
+	};
+	$scope.login = function() {
+			Auth.authenticate($scope.userLogging, function(user) {
+			garajeApp.setUserSesion(user);		
+			$scope.userSesion = garajeApp.getUserSesion();			
+		});
+	}	
+}]);  
+
+garajeControllers.controller('ProyectoListCtrl', ['$scope', '$location','Proyectos',
+  function($scope, $location, Proyectos, Login) {
+    $scope.proyectos = Proyectos.query();
+	$scope.userSesion = garajeApp.getUserSesion();
+    $scope.orderProp = 'nombre';
+	
+	//REPETIDA, esta en PrincipatCtrl
+	$scope.logged = function() {
+			return $scope.userSesion.username !== undefined;	
+	};
+		
+}]);  
   
-  
-  garajeControllers.controller('ProyectoNewCtrl', ['$scope', '$location','$routeParams', 'Proyecto','Images',
+garajeControllers.controller('ProyectoNewCtrl', ['$scope', '$location','$routeParams', 'Proyecto','Images',
   function($scope, $location, $routeParams, Proyecto, Images) {
   
     $scope.proyecto = {};
@@ -25,11 +48,12 @@ garajeControllers.controller('ProyectoListCtrl', ['$scope', 'Proyectos',
 	$scope.update = function() {
 		Proyecto.create($scope.proyecto); 
 	}
-	$scope.goNext = function (hash) { 
-		$location.path(hash);
-	}
 	
-  }]);
+	/*$scope.goNext = function (hash) { 
+		$location.path(hash);
+	}*/
+	
+}]);
 
    
 garajeControllers.controller('ProyectoDetailCtrl', ['$scope', '$location','$routeParams', 'Proyecto','Images','Image',
@@ -37,16 +61,18 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope', '$location','$rout
   
     $scope.proyecto = Proyecto.query({proyectoId: $routeParams.proyectoId}, function(proyecto) {
     });
+	
 	$scope.images = Images.query({proyectoId: $routeParams.proyectoId}, function(images) {
-        $scope.mainImageUrl = images[0].imageURL;
+        $scope.mainImageUrl = images[0].URLImagen;
     });
 
     $scope.setImage = function(imageUrl) {
-      $scope.mainImageUrl = imageUrl;
+      $scope.mainImageUrl = imageUrl;	  
     }
 	
 	$scope.update = function() {
-		$scope.proyecto.$update({proyectoId: $routeParams.proyectoId});
+		$scope.proyecto.$update({proyectoId: $routeParams.proyectoId}, function(){
+			alert("Se ha modificado el proyecto")});
 		//Proyecto.update({proyectoId: $routeParams.proyectoId}); 
 	}
 	
@@ -57,35 +83,20 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope', '$location','$rout
 	$scope.deletes = function() {
 		Proyecto.remove({proyectoId: $routeParams.proyectoId}); 
 	}
-	$scope.goNext = function (hash) { 
-		$location.path(hash);
-	}
-	
-  }]);
-  
-   
-  garajeControllers.controller('ProyectoListCtrl', ['$scope', 'Proyectos',
-  function($scope, Proyectos, $http) {
-    $scope.proyectos = Proyectos.query();
-    $scope.orderProp = 'age';
-
+			
 }]);
-  
   
    
   //==========================================================
   
-  
-  garajeControllers.controller('UserListCtrl', ['$scope', 'Users',
-  function($scope, Users, $http) {
+garajeControllers.controller('UserListCtrl', ['$scope', '$location', 'Users',
+  function($scope, $location, Users, Login) {
     $scope.users = Users.query();
-    $scope.orderProp = 'age';
-
-}]);
+	$scope.userSesion = garajeApp.getUserSesion();
+    $scope.orderProp = 'username';
+}]);    
   
-  
-  
-  garajeControllers.controller('UserNewCtrl', ['$scope', '$location','$routeParams', 'User',
+garajeControllers.controller('UserNewCtrl', ['$scope', '$location','$routeParams', 'User',
   function($scope, $location, $routeParams, User) {
   
     $scope.user = {};
@@ -97,33 +108,28 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope', '$location','$rout
 	$scope.update = function() {
 		User.create($scope.user); 
 	}
-	$scope.goNext = function (hash) { 
-		$location.path(hash);
-	}
-	
-  }]);
-
+}]);
 
 garajeControllers.controller('UserDetailCtrl', ['$scope', '$location','$routeParams', 'User',
   function($scope, $location, $routeParams, User) {
   
     $scope.user = User.query({userId: $routeParams.userId}, function(user) {
-    });
+    });	
 
     $scope.setImage = function(imageUrl) {
       $scope.mainImageUrl = imageUrl;
     }
 	
 	$scope.update = function() {
-		$scope.user.$update({userId: $routeParams.userId});
+		$scope.user.$update({userId: $routeParams.userId},function(){
+			alert("Se ha modificado el usuario")});
 		//Proyecto.update({proyectoId: $routeParams.proyectoId}); 
 	}
 	
 	$scope.deletes = function() {
 		User.remove({userId: $routeParams.userId}); 
 	}
-	$scope.goNext = function (hash) { 
-		$location.path(hash);
-	}
-	
-  }]);
+}]);
+  
+  
+

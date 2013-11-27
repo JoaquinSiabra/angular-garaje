@@ -1,3 +1,14 @@
+
+<div class="row-fluid">
+		<div class="span12">
+			 <a href="#/principal/">Principal</a>	 
+			 <a href="#/proyectos/">Proyectos</a>	
+			 <a href="#/users/">Usuarios</a>
+			<a href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a>			 			 
+		</div>   
+</div>
+
+
 <div class="phone-images">
   <img ng-src="{{user.imagen}}">
 </div>
@@ -15,7 +26,7 @@
 		Bio: <textarea col="10" rows="5" style="resize:none" ng-model="user.bio" /></textarea><br />
 		Username: <input type="text" ng-model="user.username" /><br />		
 		Password: <input type="password" ng-model="user.password" /><br />			
-		<button ng-click="update(user);">SAVE</button><button ng-click="deletes(user);goNext('/users')">DELETE</button>
+		<button ng-click="update();">SAVE</button><button ng-click="deletes();" go-click="/users">DELETE</button>
 	</form>
 </div>
 
