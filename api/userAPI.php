@@ -10,6 +10,7 @@ $app->get('/users/search/:query', 'findByName');
 $app->post('/users', 'addUser');
 $app->put('/users/:id', 'updateUser');
 $app->delete('/users/:id','deleteUser');
+$app->post('/login','loginUser');
 
 $app->run();
 
@@ -42,6 +43,28 @@ function getUser($id) {
 		$stmt->execute();
 		$user = $stmt->fetchObject(); 
 		$user->imagen = get_gravatar($user->email,120);		
+		$db = null;
+
+		echo json_encode($user); 
+		
+	} catch(PDOException $e) {
+		echo '{"error":{"text":'.'Reading Error '. $e->getMessage() .'}}'; 
+	}
+}
+
+function loginUser() {
+	error_log('loginUser\n', 3, 'php.log');
+	$request = Slim::getInstance()->request();
+	$user = json_decode($request->getBody());
+	$sql = "SELECT username,password,idUser
+			FROM garaje_user WHERE username=:username AND password=:password";
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sql);  
+		$stmt->bindParam("username", $user->username);
+		$stmt->bindParam("password", $user->password);
+		$stmt->execute();
+		$user = $stmt->fetchObject(); 
 		$db = null;
 
 		echo json_encode($user); 

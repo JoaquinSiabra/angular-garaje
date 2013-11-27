@@ -1,37 +1,16 @@
 'use strict';
 
-/* Services */
-
 var garajeServices = angular.module('garajeServices', ['ngResource']);
-
-/*phonecatServices.factory('Phone', ['$resource',
-  function($resource){
-    return $resource('http://localhost/garaje/api/index.php/proyectos');
-  }]);*/
-  
   
 garajeServices.factory('Proyectos', ['$resource',
   function($resource){
-    return $resource('http://localhost/garaje/api/index.php/proyectos', {},
+    return $resource('http://localhost/garaje/api/proyectoAPI.php/proyectos', {},
 					{query: {method:'GET', isArray:true}});
-  }]);
-
-  garajeServices.factory('Images', ['$resource',
-  function($resource){  
-    return $resource('http://localhost/garaje/api/index.php/imagenes/:proyectoId', {},
-					{query: {method:'GET', isArray:true}});
-  }]);
-  
-  garajeServices.factory('Image', ['$resource',
-  function($resource){
-    return $resource('http://localhost/garaje/api/index.php/imagenes', {}, {
-	  create: {method:'POST', data: '@proyecto'},
-    });
   }]);
   
 garajeServices.factory('Proyecto', ['$resource',
   function($resource){
-    return $resource('http://localhost/garaje/api/index.php/proyectos/:proyectoId', {}, {
+    return $resource('http://localhost/garaje/api/proyectoAPI.php/proyectos/:proyectoId', {}, {
       query: {method:'GET', isArray: false},
 	  create: {method:'POST',data: '@proyecto'},
       update: {method:'PUT', params: {proyectoId: '@proyectoId'}},
@@ -40,6 +19,20 @@ garajeServices.factory('Proyecto', ['$resource',
   }]);
   
   
+  garajeServices.factory('Images', ['$resource',
+  function($resource){  
+    return $resource('http://localhost/garaje/api/proyectoAPI.php/imagenes/:proyectoId', {},
+					{query: {method:'GET', isArray:true}});
+  }]);
+  
+  garajeServices.factory('Image', ['$resource',
+  function($resource){
+    return $resource('http://localhost/garaje/api/proyectoAPI.php/imagenes', {}, {
+	  create: {method:'POST', data: '@proyecto'},
+    });
+  }]);
+    
+  
   //--------------------------------------------
     
 garajeServices.factory('Users', ['$resource',
@@ -47,7 +40,6 @@ garajeServices.factory('Users', ['$resource',
     return $resource('http://localhost/garaje/api/userAPI.php/users', {},
 					{query: {method:'GET', isArray:true}});
   }]);
-
   
 garajeServices.factory('User', ['$resource',
   function($resource){
@@ -58,4 +50,13 @@ garajeServices.factory('User', ['$resource',
       remove: {method:'DELETE', params: {userId: '@userId'}}
     });
   }]);
+  
+garajeServices.factory('Auth', ['$resource',
+  function($resource){
+    return $resource('http://localhost/garaje/api/userAPI.php/login', {}, {
+	  authenticate: {method:'POST',data: '@user'},
+    });
+  }]);
 
+  
+ 

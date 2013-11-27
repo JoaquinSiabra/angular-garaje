@@ -1,0 +1,35 @@
+<div class="container-fluid">
+
+	<div class="row-fluid">
+		<div class="span12">
+			 <a href="#/principal/">Principal</a>	 
+			 <a href="#/proyectos/">Proyectos</a>	
+			 <a href="#/users/">Usuarios</a>
+			 <a id="userLoggedLink" href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a>		 			 
+		</div>   
+	</div>
+		
+	<div class="row-fluid">	
+		<div class="span4">
+				<form novalidate class="simple-form">
+					Username: <input type="text" ng-model="userLogging.username" /><br />		
+					Password: <input type="password" ng-model="userLogging.password" /><br />				
+					<button id="login" ng-show="!logged()" ng-click="login();">Log In</button>
+					<button id="logout" ng-show="logged()" ng-click="logout();">Log Out</button>
+					<button id="signup" ng-show="!logged()" go-click="/users/new/">Sign up</button>
+				</form>			
+		</div> 
+		<div class="span8">			
+			  <img ng-src="img/garaje.jpg">	
+		</div> 
+	</div>
+
+</div>
+
+
+
+
+
+
+
+

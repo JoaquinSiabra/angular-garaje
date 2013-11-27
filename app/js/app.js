@@ -11,9 +11,31 @@ var garajeApp = angular.module('garajeApp', [
   'garajeDirectives'
 ]); 
 
+//Para el rootScope-------
+var $userSesion = {};
+
+garajeApp.setUserSesion = function(userSesion){
+	$userSesion = userSesion;
+}
+garajeApp.getUserSesion = function(){
+	return $userSesion;
+}
+garajeApp.removeUserSesion = function(){
+	$userSesion = {};
+}
+//_------------------------
+
 garajeApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
+		when('/principal', {
+        templateUrl: 'partials/principal.html',
+		controller: 'PrincipalCtrl'
+      }).
+	  /*when('/login', {
+        templateUrl: 'partials/login.html',
+        controller: 'LoginCtrl'
+      }).*/
       when('/proyectos', {
         templateUrl: 'partials/proyecto-list.html',
         controller: 'ProyectoListCtrl'
@@ -39,6 +61,6 @@ garajeApp.config(['$routeProvider',
         controller: 'UserDetailCtrl'
       }).
       otherwise({
-        redirectTo: '/proyectos'
+        redirectTo: '/principal'
       });
   }]);
