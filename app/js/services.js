@@ -57,6 +57,9 @@ garajeServices.factory('Auth', ['$resource',
 	  authenticate: {method:'POST',data: '@user'},
     });
   }]);
+  
+
+  
 
   
  

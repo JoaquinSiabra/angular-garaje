@@ -11,31 +11,23 @@ var garajeApp = angular.module('garajeApp', [
   'garajeDirectives'
 ]); 
 
-//Para el rootScope-------
-var $userSesion = {};
 
-garajeApp.setUserSesion = function(userSesion){
-	$userSesion = userSesion;
-}
-garajeApp.getUserSesion = function(){
-	return $userSesion;
-}
-garajeApp.removeUserSesion = function(){
-	$userSesion = {};
-}
 //_------------------------
 
 garajeApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-		when('/principal', {
-        templateUrl: 'partials/principal.html',
-		controller: 'PrincipalCtrl'
-      }).
-	  /*when('/login', {
-        templateUrl: 'partials/login.html',
+	  when('/portada', {
+        templateUrl: 'partials/portada.html',
         controller: 'LoginCtrl'
-      }).*/
+      }).
+	  when('/bye', {
+        templateUrl: 'partials/despedida.html'
+      }).
+	  when('/login', {
+        templateUrl: 'partials/login.html',
+		controller: 'LoginCtrl'
+      }).
       when('/proyectos', {
         templateUrl: 'partials/proyecto-list.html',
         controller: 'ProyectoListCtrl'
@@ -52,6 +44,10 @@ garajeApp.config(['$routeProvider',
         templateUrl: 'partials/user-list.html',
         controller: 'UserListCtrl'
       }).
+	  when('/users/area', {
+        templateUrl: 'partials/user-area.html',
+        controller: 'UserAreaCtrl'
+      }).
 	  when('/users/new', {
         templateUrl: 'partials/user-detail.html',
         controller: 'UserNewCtrl'
@@ -61,6 +57,6 @@ garajeApp.config(['$routeProvider',
         controller: 'UserDetailCtrl'
       }).
       otherwise({
-        redirectTo: '/principal'
+        redirectTo: '/portada'
       });
   }]);

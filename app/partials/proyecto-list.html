@@ -1,13 +1,8 @@
 <div class="container-fluid">
 
-	<div class="row-fluid">
-		<div class="span12">
-			 <a href="#/principal/">Principal</a>	 
-			 <a href="#/proyectos/">Proyectos</a>	
-			 <a href="#/users/">Usuarios</a>
-			<a href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a>			 			 
-		</div>   
-	</div>
+		<div class="row-fluid">
+			<p class="text-right"> <h3><a id="userLoggedLink" href="#/users/area">{{userSesion.username}}</a></h3></p>	 			 
+		</div>
 
 	<div class="row-fluid">   
 		<div class="span2">
@@ -25,9 +20,8 @@
 		<div class="span10">
 		  <h1>Proyectos</h1>
 		  <ul class="phones">
-			<li ng-repeat="proyecto in proyectos | filter:query | orderBy:orderProp"
-				class="thumbnail phone-listing">
-			  <a href="#/proyectos/{{proyecto.idProyecto}}" class="thumb"><img ng-src="img/proyectos/{{proyecto.URLImagen}}"></a>
+			<li ng-repeat="proyecto in proyectos | filter:query | orderBy:orderProp" class="thumbnail phone-listing">
+			  <a href="#/proyectos/{{proyecto.idProyecto}}" class="thumb"><img class="thumb" ng-src="img/proyectos/{{proyecto.URLImagen}}"></a>
 			  <a href="#/proyectos/{{proyecto.idProyecto}}">{{proyecto.nombre}}</a>
 			</li>
 		  </ul>

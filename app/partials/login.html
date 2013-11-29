@@ -1,15 +1,25 @@
 <div class="container-fluid">
-  <div class="row-fluid">
-     <div class="span10">		
-		
-		<form novalidate class="simple-form">
-			Username: <input type="text" ng-model="userLogging.username" /><br />		
-			Password: <input type="password" ng-model="userLogging.password" /><br />		
-			{{userSesion.username}}			
-			<button ng-click="login();goNext('/principal')">Log In</button>
-		</form>	
 	
-    </div>
-	
-  </div>
+		<div class="row-fluid">
+			<p class="text-right"> <h3><a id="userLoggedLink" href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a></h3></p>	 			 
+		</div>
+
+		<div class="container" ng-show="!logged()">
+			  <form class="form-signin">
+					<h2 class="form-signin-heading">Por favor, identifícate</h2>
+					<input type="text" ng-model="userLogging.username" class="form-control" placeholder="Username" required autofocus>
+					<input type="password" ng-model="userLogging.password" class="form-control" placeholder="Password" required>
+					
+					<button id="login" class="btn btn-lg btn-success btn-block" ng-show="!logged()" go-click="/users/area" ng-click="login();" type="submit">Sign in</button>
+					<button id="signup" class="btn btn-lg btn-info btn-block" ng-show="!logged()" go-click="/users/new/" type="submit">Sign up</button>
+			   </form>
+		</div>
 </div>
+
+
+
+
+
+
+
+

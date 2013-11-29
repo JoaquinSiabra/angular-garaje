@@ -1,21 +1,13 @@
 
-<div class="row-fluid">
-		<div class="span12">
-			 <a href="#/principal/">Principal</a>	 
-			 <a href="#/proyectos/">Proyectos</a>	
-			 <a href="#/users/">Usuarios</a>
-			<a href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a>			 			 
-		</div>   
-</div>
-
+		<div class="row-fluid">
+			<p class="text-right"> <h3><a id="userLoggedLink" href="#/users/area">{{userSesion.username}}</a></h3></p>	 			 
+		</div>
 
 <div class="phone-images">
   <img ng-src="{{user.imagen}}">
 </div>
 
 <h1>{{user.username}}</h1>
-
-<p>{{user.bio}}</p>
 
  <div >
  

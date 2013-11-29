@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="description" content="Garaje - Aplicacion para la gestion de proyectos audiovisuales">
+		<meta name="description" content="">
 		<meta name="author" content="Joaquin Siabra Fraile">
 		<link rel="shortcut icon" href="../../docs-assets/ico/favicon.png">
 
@@ -13,14 +13,12 @@
 		<link rel="stylesheet" href="css/animations.css">
 		<link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
 		<link href="lib/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-		<link href="lib/bootstrap/css/theme.css" rel="stylesheet">		
-		<link href="css/signin.css" rel="stylesheet">
+		<link href="lib/bootstrap/css/theme.css" rel="stylesheet">
 		
-		<script src="lib/jquery/jquery-1.10.2.js"></script>
 		<script src="lib/bootstrap/js/bootstrap.min.js"></script>
 		<script src="http://getbootstrap.com/docs-assets/js/holder.js"></script>	
 		
-
+	  <script src="lib/jquery/jquery-1.10.2.js"></script>
 	  <script src="lib/angular/angular.js"></script>
 	  <script src="lib/angular/angular-animate.js"></script>
 	  <script src="lib/angular/angular-resource.js"></script>
@@ -36,9 +34,8 @@
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" ng-controller='LoginCtrl'>
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
-	  
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -46,32 +43,36 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#/principal">Garaje</a>
+          <a class="navbar-brand" href="#">Garaje</a>
         </div>
+        <div class="navbar-collapse collapse">
 		
-        <div class="navbar-collapse collapse">		
           <ul class="nav navbar-nav">            
 			<li><a href="#/proyectos/">Proyectos</a></li>
-			<li><a href="#/users/">Usuarios</a></li>			    			
-          </ul>	
-		  <div class="col-sm-4">	
-			<!--button class="btn btn-link" style="margin-top:0.6em;" type="submit"
-				  ng-show="logged()"  go-click="#/users/{{userSesion.idUser}}"">{{userSesion.username}}
-			</button-->	
-			<button class="btn btn-link" ng-show="logged()" go-click="/users/area" style="margin-top:0.6em;" type="submit">Mi Area</button>	
-			<button id="logout" class="btn btn-danger" style="margin-top:0.6em;" type="submit"
-				  ng-show="logged()" ng-click="logout();" go-click="/bye">Log Out
-			</button>	
-			<li>				  
-			</div>
-		</div>
-		
+			<li><a href="#/users/">Usuarios</a></li>
+			<li><a href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a>	</li>            
+          </ul>
+		  
+		  <form class="navbar-form navbar-right">
+            <div class="form-group">
+              <input type="text" ng-model="userLogging.username" placeholder="Username" class="form-control">
+            </div>
+            <div class="form-group">
+              <input type="password" ng-model="userLogging.password" placeholder="Password" class="form-control">
+            </div>
+            <button type="submit" id="login" ng-show="!logged()" ng-click="login();" class="btn btn-success">Sign in</button>
+			<button type="submit" id="logout" ng-show="logged()" ng-click="logout();" class="btn btn-success">Log Out</button>
+			<button type="submit" id="signup" ng-show="!logged()" go-click="/users/new/" class="btn btn-info">Sign up</button>
+		  </form>	  
+						  
+        </div>
       </div>
     </div>
 	
+	</div>
 	
    <div class="container theme-showcase">
-				 
+   
 		<div class="view-container">
 			<div ng-view class="view-frame"></div>
 		</div>	

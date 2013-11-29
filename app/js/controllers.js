@@ -2,36 +2,45 @@
 
 var garajeControllers = angular.module('garajeControllers', []);
 
-garajeControllers.controller('PrincipalCtrl', ['$scope', '$location','Auth',
-  function($scope, $location,  Auth) {
+ 
+garajeControllers.controller('LoginCtrl', ['$scope', '$location','Auth',
+  function($scope, $location, Auth) {
 
-	$scope.userSesion = garajeApp.getUserSesion();
+	$scope.userSesion = angular.fromJson(localStorage.getItem('userSesion')) || {};
+	$scope.userLogging = {username: "", password:""};
 	
-	$scope.logged = function() {
-			return $scope.userSesion.username !== undefined;	
+	$scope.logged = function() {		
+			return ($scope.userSesion.username!=undefined);	
 	};
+	
 	$scope.logout = function() {
-			garajeApp.removeUserSesion();
-			$scope.userSesion = garajeApp.getUserSesion();	
+			localStorage.clear();
+			sessionStorage.clear();	
+			$scope.$emit('LoginEvent');			
 	};
+	
 	$scope.login = function() {
-			Auth.authenticate($scope.userLogging, function(user) {
-			garajeApp.setUserSesion(user);		
-			$scope.userSesion = garajeApp.getUserSesion();			
+		Auth.authenticate($scope.userLogging, function(user) {
+				localStorage.setItem('userSesion', angular.toJson(user)); 			
+				$scope.userSesion = angular.fromJson(localStorage.getItem('userSesion'));
+				//$scope.$emit('LoginEvent');
 		});
 	}	
+	
+	$scope.$on('LoginEvent', function() {
+		$scope.userSesion = angular.fromJson(localStorage.getItem('userSesion')) || {};
+	});
+	
+	//$scope.$watch($scope.userSesion,$scope.$broadcast('LoginEvent'));
+	
+	
 }]);  
 
 garajeControllers.controller('ProyectoListCtrl', ['$scope', '$location','Proyectos',
   function($scope, $location, Proyectos, Login) {
     $scope.proyectos = Proyectos.query();
-	$scope.userSesion = garajeApp.getUserSesion();
+	$scope.userSesion = angular.fromJson(localStorage.getItem('userSesion'));
     $scope.orderProp = 'nombre';
-	
-	//REPETIDA, esta en PrincipatCtrl
-	$scope.logged = function() {
-			return $scope.userSesion.username !== undefined;	
-	};
 		
 }]);  
   
@@ -92,7 +101,7 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope', '$location','$rout
 garajeControllers.controller('UserListCtrl', ['$scope', '$location', 'Users',
   function($scope, $location, Users, Login) {
     $scope.users = Users.query();
-	$scope.userSesion = garajeApp.getUserSesion();
+	$scope.userSesion = angular.fromJson(localStorage.getItem('userSesion'));
     $scope.orderProp = 'username';
 }]);    
   
@@ -110,11 +119,20 @@ garajeControllers.controller('UserNewCtrl', ['$scope', '$location','$routeParams
 	}
 }]);
 
+garajeControllers.controller('UserAreaCtrl', ['$scope',
+  function($scope) {  
+    $scope.userSesion = angular.fromJson(localStorage.getItem('userSesion')) || {};  
+	
+	$scope.$watch($scope.userSesion, function (){$scope.userSesion = angular.fromJson(localStorage.getItem('userSesion'));alert($scope.userSesion.username )});
+}]);
+
+
 garajeControllers.controller('UserDetailCtrl', ['$scope', '$location','$routeParams', 'User',
   function($scope, $location, $routeParams, User) {
   
     $scope.user = User.query({userId: $routeParams.userId}, function(user) {
     });	
+	
 
     $scope.setImage = function(imageUrl) {
       $scope.mainImageUrl = imageUrl;
