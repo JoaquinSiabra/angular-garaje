@@ -1,44 +1,34 @@
 'use strict';
 
 var garajeControllers = angular.module('garajeControllers', []);
-
-garajeControllers.controller('PrincipalCtrl', ['$scope', '$location','Auth',
-  function($scope, $location,  Auth) {
-
-	$scope.userSesion = garajeApp.getUserSesion();
+ 
+garajeControllers.controller('SesionCtrl', ['$rootScope', '$scope','Sesion',
+  function($rootScope, $scope, Sesion) {
+ 
+	//Esto hay que mejorarlo
+  	$rootScope.userSesion = Sesion.userSesion;
+	$rootScope.logged = Sesion.logged;
+	$rootScope.logout = Sesion.logout;
+	$rootScope.login = Sesion.login;
 	
-	$scope.logged = function() {
-			return $scope.userSesion.username !== undefined;	
-	};
-	$scope.logout = function() {
-			garajeApp.removeUserSesion();
-			$scope.userSesion = garajeApp.getUserSesion();	
-	};
-	$scope.login = function() {
-			Auth.authenticate($scope.userLogging, function(user) {
-			garajeApp.setUserSesion(user);		
-			$scope.userSesion = garajeApp.getUserSesion();			
-		});
-	}	
+	$scope.userLogging = {username: "", password:""};
+	
 }]);  
 
-garajeControllers.controller('ProyectoListCtrl', ['$scope', '$location','Proyectos',
-  function($scope, $location, Proyectos, Login) {
+ 
+garajeControllers.controller('ProyectoListCtrl', ['$rootScope','$scope','Proyectos','Sesion',
+  function($rootScope,$scope, Proyectos,Sesion) {
+  	
     $scope.proyectos = Proyectos.query();
-	$scope.userSesion = garajeApp.getUserSesion();
     $scope.orderProp = 'nombre';
 	
-	//REPETIDA, esta en PrincipatCtrl
-	$scope.logged = function() {
-			return $scope.userSesion.username !== undefined;	
-	};
-		
 }]);  
   
-garajeControllers.controller('ProyectoNewCtrl', ['$scope', '$location','$routeParams', 'Proyecto','Images',
-  function($scope, $location, $routeParams, Proyecto, Images) {
+garajeControllers.controller('ProyectoNewCtrl', ['$scope','$routeParams', 'Proyecto','Images','Sesion',
+  function($scope, $routeParams, Proyecto, Images, Sesion) {
   
     $scope.proyecto = {};
+	$scope.proyecto.idUser= Sesion.getIdUser();
 	$scope.images = {};
   
     $scope.setImage = function(imageUrl) {
@@ -49,15 +39,11 @@ garajeControllers.controller('ProyectoNewCtrl', ['$scope', '$location','$routePa
 		Proyecto.create($scope.proyecto); 
 	}
 	
-	/*$scope.goNext = function (hash) { 
-		$location.path(hash);
-	}*/
-	
 }]);
 
    
-garajeControllers.controller('ProyectoDetailCtrl', ['$scope', '$location','$routeParams', 'Proyecto','Images','Image',
-  function($scope, $location, $routeParams, Proyecto, Images, Image) {
+garajeControllers.controller('ProyectoDetailCtrl', ['$scope','$routeParams', 'Proyecto','Images','Image','Sesion','Colaborador',
+  function($scope, $routeParams, Proyecto, Images, Image,Sesion,Colaborador) {
   
     $scope.proyecto = Proyecto.query({proyectoId: $routeParams.proyectoId}, function(proyecto) {
     });
@@ -69,6 +55,29 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope', '$location','$rout
     $scope.setImage = function(imageUrl) {
       $scope.mainImageUrl = imageUrl;	  
     }
+	
+	$scope.esUsuarioPropietario = function() {
+      return ($scope.proyecto.username == Sesion.getUser());	  
+    }
+	$scope.esUsuarioColaborador = function() {
+	  var esta = false;
+	  var colaborador;
+	  for (colaborador in $scope.proyecto.colaboradores) {
+		esta = esta || (colaborador.username == Sesion.getUser());
+	  }
+      return (esta);	  
+    }
+	
+	$scope.colaborar= function() {
+      Colaborador.create({proyectoId: $routeParams.proyectoId, userId: Sesion.getIdUser()}, function (){
+			 $scope.proyecto = Proyecto.query({proyectoId: $routeParams.proyectoId});
+	  }); 
+    }	
+	$scope.abandonar= function(posicion) {
+      Colaborador.remove({proyectoId: $routeParams.proyectoId, userId: Sesion.getIdUser()}, function (){
+			$scope.proyecto.colaboradores.splice(posicion,1);
+	  }); 
+    }	
 	
 	$scope.update = function() {
 		$scope.proyecto.$update({proyectoId: $routeParams.proyectoId}, function(){
@@ -88,16 +97,17 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope', '$location','$rout
   
    
   //==========================================================
-  
-garajeControllers.controller('UserListCtrl', ['$scope', '$location', 'Users',
-  function($scope, $location, Users, Login) {
+
+garajeControllers.controller('UserListCtrl', ['$rootScope','$scope','Users','Sesion',
+  function($rootScope, $scope, Users, Sesion) {  
+	
     $scope.users = Users.query();
-	$scope.userSesion = garajeApp.getUserSesion();
-    $scope.orderProp = 'username';
+    $scope.orderProp = 'username';	
+
 }]);    
   
-garajeControllers.controller('UserNewCtrl', ['$scope', '$location','$routeParams', 'User',
-  function($scope, $location, $routeParams, User) {
+garajeControllers.controller('UserNewCtrl', ['$scope','$routeParams', 'User',
+  function($scope, $routeParams, User) {
   
     $scope.user = {};
   
@@ -108,16 +118,28 @@ garajeControllers.controller('UserNewCtrl', ['$scope', '$location','$routeParams
 	$scope.update = function() {
 		User.create($scope.user); 
 	}
+	
 }]);
 
-garajeControllers.controller('UserDetailCtrl', ['$scope', '$location','$routeParams', 'User',
-  function($scope, $location, $routeParams, User) {
+garajeControllers.controller('UserAreaCtrl', ['$rootScope','Sesion',
+  function($rootScope, Sesion) {  
+  
+	
+}]);
+
+
+garajeControllers.controller('UserDetailCtrl', ['$scope', '$rootScope','$routeParams', 'User','Sesion',
+  function($scope,$rootScope, $routeParams, User,Sesion) {
   
     $scope.user = User.query({userId: $routeParams.userId}, function(user) {
-    });	
+    });		
 
     $scope.setImage = function(imageUrl) {
       $scope.mainImageUrl = imageUrl;
+    }
+	
+	$scope.esUsuarioPropietario= function() {
+      return ($scope.proyecto.username == Sesion.getUser());	  
     }
 	
 	$scope.update = function() {
@@ -129,7 +151,24 @@ garajeControllers.controller('UserDetailCtrl', ['$scope', '$location','$routePar
 	$scope.deletes = function() {
 		User.remove({userId: $routeParams.userId}); 
 	}
+	
 }]);
   
+  
+garajeControllers.controller('UserProyectosCtrl', ['$rootScope','$scope','$routeParams','Proyectos',
+  function($rootScope, $scope, $routeParams, Proyectos) {
+  	
+    $scope.proyectos = Proyectos.queryUser({userRol:'propietario', userId: $routeParams.userId});
+    $scope.orderProp = 'nombre';
+	
+}]); 
+
+garajeControllers.controller('UserColaboracionesCtrl', ['$rootScope','$scope','$routeParams','Proyectos',
+  function($rootScope, $scope, $routeParams, Proyectos) {
+  	
+    $scope.proyectos = Proyectos.queryUser({userRol:'colaborador', userId: $routeParams.userId});
+    $scope.orderProp = 'nombre';
+	
+}]); 
   
 

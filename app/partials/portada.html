@@ -1,0 +1,27 @@
+
+<div ng-include src="'partials/menu.html'">
+</div>
+
+<div class="container-fluid">
+	<div class="jumbotron">
+			<div >
+				<h2>Hola {{userSesion.username}}</h2>
+				<p class="lead">Esta será la portada de Garaje. Aquí te explicaremos brevemente que 
+				  puedes ir a <a href="#/proyectos/">Proyectos</a> y a <a href="#/users/">Usuarios</a> sin estar registrado. 
+				  Habrá imágenes y cosas por el estilo.<br ></p>
+			</div>
+			
+			<div  ng-show="!logged()">
+			  <form class="form-signin">
+					<input type="text" ng-model="userLogging.username" class="form-control" placeholder="Username" required autofocus>
+					<input type="password" ng-model="userLogging.password" class="form-control" placeholder="Password" required>
+					
+					<button id="login" class="btn btn-lg btn-success btn-block" ng-show="!logged()"  ng-click="login(userLogging);" type="submit">Sign in</button>
+					<button id="signup" class="btn btn-lg btn-info btn-block" ng-show="!logged()" go-click="/user/new/" type="submit">Sign up</button>
+			   </form>
+			</div>	
+	
+	</div>	
+    <img class="img-responsive" src="img/garaje.jpg">  
+
+</div>
