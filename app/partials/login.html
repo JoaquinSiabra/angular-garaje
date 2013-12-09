@@ -1,8 +1,12 @@
+
+<div ng-include src="'partials/menu.html'">
+</div>
+
 <div class="container-fluid">
 	
-		<div class="row-fluid">
+		<!--div class="row-fluid">
 			<p class="text-right"> <h3><a id="userLoggedLink" href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a></h3></p>	 			 
-		</div>
+		</div-->
 
 		<div class="container" ng-show="!logged()">
 			  <form class="form-signin">
@@ -10,7 +14,7 @@
 					<input type="text" ng-model="userLogging.username" class="form-control" placeholder="Username" required autofocus>
 					<input type="password" ng-model="userLogging.password" class="form-control" placeholder="Password" required>
 					
-					<button id="login" class="btn btn-lg btn-success btn-block" ng-show="!logged()" go-click="/users/area" ng-click="login();" type="submit">Sign in</button>
+					<button id="login" class="btn btn-lg btn-success btn-block" ng-show="!logged()" go-click="/users/area" ng-click="login(userLogging);" type="submit">Sign in</button>
 					<button id="signup" class="btn btn-lg btn-info btn-block" ng-show="!logged()" go-click="/users/new/" type="submit">Sign up</button>
 			   </form>
 		</div>

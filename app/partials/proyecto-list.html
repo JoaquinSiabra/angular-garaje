@@ -1,7 +1,11 @@
+
+<div ng-include src="'partials/menu.html'">
+</div>
+
 <div class="container-fluid">
 
 		<div class="row-fluid">
-			<p class="text-right"> <h3><a id="userLoggedLink" href="#/users/area">{{userSesion.username}}</a></h3></p>	 			 
+			<p class="text-right"> <h3><a id="userLoggedLink" href="#/user/area">{{userSesion.username}}</a></h3></p>	 			 
 		</div>
 
 	<div class="row-fluid">   
@@ -13,7 +17,7 @@
 			<option value="fechaAlta">Fecha Alta</option>
 		  </select>	 
 		  
-		  <button id="newProject" ng-show="logged()" go-click="/proyectos/new/">Nuevo Proyecto</button>	
+		  <button id="newProject" ng-show="logged()" go-click="/proyecto/new/">Nuevo Proyecto</button>	
 
 		</div>
 		
@@ -21,8 +25,8 @@
 		  <h1>Proyectos</h1>
 		  <ul class="phones">
 			<li ng-repeat="proyecto in proyectos | filter:query | orderBy:orderProp" class="thumbnail phone-listing">
-			  <a href="#/proyectos/{{proyecto.idProyecto}}" class="thumb"><img class="thumb" ng-src="img/proyectos/{{proyecto.URLImagen}}"></a>
-			  <a href="#/proyectos/{{proyecto.idProyecto}}">{{proyecto.nombre}}</a>
+			  <a href="#/proyecto/{{proyecto.idProyecto}}" class="thumb"><img class="thumb" ng-src="img/proyectos/{{proyecto.URLImagen}}"></a>
+			  <a href="#/proyecto/{{proyecto.idProyecto}}">{{proyecto.nombre}}</a>
 			</li>
 		  </ul>
 		</div>	

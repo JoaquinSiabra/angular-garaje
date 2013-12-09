@@ -1,8 +1,10 @@
 
-		<div class="row-fluid">
-			<p class="text-right"> <h3><a id="userLoggedLink" href="#/users/area">{{userSesion.username}}</a></h3></p>	 			 
-		</div>
+<div ng-include src="'partials/menu.html'">
+</div>
 
+<div class="row-fluid">
+	<p class="text-right"> <h3><a id="userLoggedLink" href="#/user/area">{{userSesion.username}}</a></h3></p>	 			 
+</div>
 
 <div class="phone-images">
   <img ng-src="img/proyectos/{{mainImageUrl}}" class="phone">
@@ -18,18 +20,36 @@
 </ul>
 
 
- <div > 
-	<form novalidate class="simple-form">
-		Nombre: <input type="text" ng-model="proyecto.nombre" /><br />
-		Imagen: http://<input type="text" ng-model="proyecto.urlImagen" /><button ng-click="addImage(proyecto);">AÑADIR</button><br />
-		Activo: <input type="text" ng-model="proyecto.estaActivo" /><br />
-		Descripcion: <input type="text" ng-model="proyecto.descripcion" /><br />
-		Comentarios: <input type="text" ng-model="proyecto.comentarios" /><br />			
-		<button ng-click="update();" >SAVE</button><button ng-click="deletes();" go-click="/proyectos">DELETE</button>
-	</form>
+ <div> 	
+	<div ng-show="!esUsuarioPropietario()"> 		 
+		<h3>Propietario: {{proyecto.propietario}}</h3><br />
+		Nombre: {{proyecto.nombre}}<br />
+		Activo: {{proyecto.estaActivo}}<br />
+		Descripcion: {{proyecto.descripcion}}<br />
+		Comentarios: {{proyecto.comentarios}}<br />
+		<button ng-click="colaborar();" ng-show="!esUsuarioColaborador()">Colaborar</button>
+		
+		<h3>Colaboradores:</h3><br />
+		<ul class="phones">
+			<li ng-repeat="colaborador in proyecto.colaboradores" class="thumbnail phone-listing">
+			  <img class="thumb" ng-src="{{colaborador.imagen}}">{{colaborador.username}}
+			  <button ng-click="abandonar($index);">Abandonar</button>
+			</li>
+		 </ul>
+	</div>
+	<div ng-show="esUsuarioPropietario()"> 		 
+		<form novalidate class="simple-form">
+			Nombre: <input type="text" ng-model="proyecto.nombre" /><br />
+			Imagen: http://<input type="text" ng-model="proyecto.urlImagen" /><button ng-click="addImage(proyecto);" ng-show="esUsuarioPropietario()">AÑADIR</button><br />
+			Activo: <input type="text" ng-model="proyecto.estaActivo" /><br />
+			Descripcion: <input type="text" ng-model="proyecto.descripcion" /><br />
+			Comentarios: <input type="text" ng-model="proyecto.comentarios" /><br />			
+			<button ng-click="update();">SAVE</button>
+			<button ng-click="deletes();" go-click="/proyectos">DELETE</button>
+		</form>
+	</div>
 </div>
 
-</form>
 
 
 

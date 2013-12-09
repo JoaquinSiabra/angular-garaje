@@ -444,3 +444,9 @@ describe('Controllers de Proyectos', function() {
   }); 
   
 });
+
+
+describe('Sesion', function(){
+});
+
+

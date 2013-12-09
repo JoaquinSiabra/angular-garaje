@@ -19,24 +19,24 @@ garajeApp.config(['$routeProvider',
     $routeProvider.
 	  when('/portada', {
         templateUrl: 'partials/portada.html',
-        controller: 'LoginCtrl'
+        controller: 'SesionCtrl'
       }).
-	  when('/bye', {
+	  /*when('/bye', {
         templateUrl: 'partials/despedida.html'
-      }).
-	  when('/login', {
+      }).*/
+	 /* when('/login', {
         templateUrl: 'partials/login.html',
-		controller: 'LoginCtrl'
-      }).
+		controller: 'SesionCtrl'
+      }).*/
       when('/proyectos', {
         templateUrl: 'partials/proyecto-list.html',
         controller: 'ProyectoListCtrl'
       }).
-	  when('/proyectos/new', {
+	  when('/proyecto/new', {
         templateUrl: 'partials/proyecto-detail.html',
         controller: 'ProyectoNewCtrl'
       }).
-      when('/proyectos/:proyectoId', {
+      when('/proyecto/:proyectoId', {
         templateUrl: 'partials/proyecto-detail.html',
         controller: 'ProyectoDetailCtrl'
       }).
@@ -44,17 +44,25 @@ garajeApp.config(['$routeProvider',
         templateUrl: 'partials/user-list.html',
         controller: 'UserListCtrl'
       }).
-	  when('/users/area', {
+	  when('/user/area', {
         templateUrl: 'partials/user-area.html',
         controller: 'UserAreaCtrl'
       }).
-	  when('/users/new', {
+	  when('/user/new', {
         templateUrl: 'partials/user-detail.html',
         controller: 'UserNewCtrl'
       }).
-	   when('/users/:userId', {
+	   when('/user/:userId', {
         templateUrl: 'partials/user-detail.html',
         controller: 'UserDetailCtrl'
+      }).
+	  when('/user/:userId/proyectos', {
+        templateUrl: 'partials/proyecto-list.html',
+        controller: 'UserProyectosCtrl'
+      }).
+	  when('/user/:userId/colaboraciones', {
+        templateUrl: 'partials/proyecto-list.html',
+        controller: 'UserColaboracionesCtrl'
       }).
       otherwise({
         redirectTo: '/portada'

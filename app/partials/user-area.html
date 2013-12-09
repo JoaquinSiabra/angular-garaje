@@ -1,13 +1,17 @@
+
+<div ng-include src="'partials/menu.html'">
+</div>
+
 <div class="container-fluid">
-	<div class="starter-template">
-        <h2>Area del usuario {{userSesion.username}}</h2>
+	<div id="userArea" class="starter-template">
+        <h2>Area del usuario <p id="username">{{userSesion.username}}</p></h2>
         <p class="lead">Esta será la página general del usuario {{userSesion.username}}</p>
-      </div>
+    </div>
 	  
-	  <div class="col-sm-4">	
-		<button class="btn btn-lg btn-success btn-block" go-click="/users/{{userSesion.idUser}}" type="submit">Mis datos</button>	
-		<button class="btn btn-lg btn-success btn-block" ng-disabled='true' type="submit">Mis proyectos</button>	
-		<button class="btn btn-lg btn-success btn-block" ng-disabled='true' type="submit">Mis colaboraciones</button>		
-	  </div>
+	<div class="col-sm-4">	
+		<button class="btn btn-lg btn-success btn-block" go-click="/user/{{userSesion.idUser}}" type="submit">Mis datos</button>	
+		<button class="btn btn-lg btn-success btn-block" go-click="/user/{{userSesion.idUser}}/proyectos" type="submit">Mis proyectos</button>	
+		<button class="btn btn-lg btn-success btn-block" go-click="/user/{{userSesion.idUser}}/colaboraciones" type="submit">Mis colaboraciones</button>		
+	 </div>
 					
 </div>

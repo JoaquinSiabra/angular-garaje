@@ -107,10 +107,10 @@ function updateUser($id) {
 	$body = $request->getBody();
 	$user= json_decode($body);
 	$sql = "UPDATE garaje_user 
-		SET nombre=:nombre,
-		apellidos=:apellidos, bio=:bio, email=:email, 
-		username=:username , password=:password 
-		WHERE idUser=:id";
+			SET nombre=:nombre,
+			apellidos=:apellidos, bio=:bio, email=:email, 
+			username=:username , password=:password 
+			WHERE idUser=:id";
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql);  
