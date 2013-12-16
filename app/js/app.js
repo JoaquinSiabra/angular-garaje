@@ -11,40 +11,32 @@ var garajeApp = angular.module('garajeApp', [
   'garajeDirectives'
 ]); 
 
-//Para el rootScope-------
-var $userSesion = {};
 
-garajeApp.setUserSesion = function(userSesion){
-	$userSesion = userSesion;
-}
-garajeApp.getUserSesion = function(){
-	return $userSesion;
-}
-garajeApp.removeUserSesion = function(){
-	$userSesion = {};
-}
 //_------------------------
 
 garajeApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-		when('/principal', {
-        templateUrl: 'partials/principal.html',
-		controller: 'PrincipalCtrl'
+	  when('/portada', {
+        templateUrl: 'partials/portada.html',
+        controller: 'SesionCtrl'
       }).
-	  /*when('/login', {
+	  /*when('/bye', {
+        templateUrl: 'partials/despedida.html'
+      }).*/
+	 /* when('/login', {
         templateUrl: 'partials/login.html',
-        controller: 'LoginCtrl'
+		controller: 'SesionCtrl'
       }).*/
       when('/proyectos', {
         templateUrl: 'partials/proyecto-list.html',
         controller: 'ProyectoListCtrl'
       }).
-	  when('/proyectos/new', {
+	  when('/proyecto/new', {
         templateUrl: 'partials/proyecto-detail.html',
         controller: 'ProyectoNewCtrl'
       }).
-      when('/proyectos/:proyectoId', {
+      when('/proyecto/:proyectoId', {
         templateUrl: 'partials/proyecto-detail.html',
         controller: 'ProyectoDetailCtrl'
       }).
@@ -52,15 +44,27 @@ garajeApp.config(['$routeProvider',
         templateUrl: 'partials/user-list.html',
         controller: 'UserListCtrl'
       }).
-	  when('/users/new', {
+	  when('/user/area', {
+        templateUrl: 'partials/user-area.html',
+        controller: 'UserAreaCtrl'
+      }).
+	  when('/user/new', {
         templateUrl: 'partials/user-detail.html',
         controller: 'UserNewCtrl'
       }).
-	   when('/users/:userId', {
+	   when('/user/:userId', {
         templateUrl: 'partials/user-detail.html',
         controller: 'UserDetailCtrl'
       }).
+	  when('/user/:userId/proyectos', {
+        templateUrl: 'partials/proyecto-list.html',
+        controller: 'UserProyectosCtrl'
+      }).
+	  when('/user/:userId/colaboraciones', {
+        templateUrl: 'partials/proyecto-list.html',
+        controller: 'UserColaboracionesCtrl'
+      }).
       otherwise({
-        redirectTo: '/principal'
+        redirectTo: '/portada'
       });
   }]);

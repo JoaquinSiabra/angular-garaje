@@ -1,13 +1,12 @@
+
+<div ng-include src="'partials/menu.html'">
+</div>
+
 <div class="container-fluid">
 
-	<div class="row-fluid">
-		<div class="span12">
-			 <a href="#/principal/">Principal</a>	 
-			 <a href="#/proyectos/">Proyectos</a>	
-			 <a href="#/users/">Usuarios</a>
-			<a href="#/users/{{userSesion.idUser}}">{{userSesion.username}}</a>			 			 
-		</div>    
-	</div>
+		<div class="row-fluid">
+			<p class="text-right"> <h3><a id="userLoggedLink" href="#/user/area">{{userSesion.username}}</a></h3></p>	 			 
+		</div>
 
 	<div class="row-fluid">
 		<div class="span2">
@@ -25,9 +24,7 @@
 			<li ng-repeat="user in users | filter:query | orderBy:orderProp"
 				class="thumbnail phone-listing">
 			  <p class="thumb"><img ng-src="{{user.imagen}}"></p>
-			  <!--a href="#/users/{{user.idUser}}" class="thumb"><img ng-src="{{user.imagen}}"></a-->
-			  <h2>{{user.username}}</h2>
-			  {{user.bio}}
+			  <h3>{{user.username}}</h3>{{user.bio}}
 			</li>
 		  </ul>
 		</div>

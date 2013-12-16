@@ -5,6 +5,7 @@
 describe('Garaje App', function() {
 
 	function login(){
+	  browser().navigateTo('../../app/#/login');
 	  input('userLogging.username').enter('anfilbiblio');
 	  input('userLogging.password').enter('redherme');
 	  element('#login').click();
@@ -17,42 +18,57 @@ describe('Garaje App', function() {
 	};
 
 
-  it('debería redireccionarse index.html a index.html#/principal', function() {
+  it('debería redireccionarse index.html a index.html#/portada', function() {
     browser().navigateTo('../../app/index.html');
-    expect(browser().location().url()).toBe('/principal');
+    expect(browser().location().url()).toBe('/portada');
   });
 
 
-  describe('Pagina principal', function() {
+  describe('Pagina portada', function() {
 	
     beforeEach(function() {
-      browser().navigateTo('../../app/#/principal');
+      browser().navigateTo('../../app/#/portada');
+    });
+	
+	afterEach(function() {
+      browser().navigateTo('../../app/#/portada');
+	  logout();
     });
 
 	
-    it('debería mostrar el boton de LogIn (y no el de LogOut) si no se ha hecho LogIn', function() {
+    it('debería redireccionarse de login a user area (si login correcto)', function() {
+		login();
+		expect(browser().location().url()).toBe('/users/area');
+    });
+	
+    it('debería mostrar en la portada el boton de Login (y no el de Logout) si no se ha hecho Login', function() {
 	  expect(element('#logout').css("display")).toBe("none");
 	  expect(element('#login').css("display")).not().toBe("none");
     });
 
-    it('debería mostrar el boton de LogOut (y no el de LogIn) si se ha hecho LogIn', function() {
+    it('debería mostrar en la portada el boton de Logout (y no el de Login) si se ha hecho Login', function() {
    	  login();
-	  expect(element('#login').css("display")).toBe("none");
+	  browser().navigateTo('../../app/#/portada');
 	  expect(element('#logout').css("display")).not().toBe("none");
+	  expect(element('#login').css("display")).toBe("none");
     });
 	
 	it('debería no mostrar el boton de SignUp si se ha hecho LogIn', function() {
+	  browser().navigateTo('../../app/#/login')
    	  login();	  
+	  browser().navigateTo('../../app/#/login');
 	  expect(element('#signup').css("display")).toBe("none");	  
     });
 	
 	it('debería mostrar el boton de SignUp si se no se ha hecho LogIn', function() {
+	  browser().navigateTo('../../app/#/login')
       expect(element('#signup').css("display")).not().toBe("none");	
     });
 
 	it('debería mostrar el username si se ha hecho LogIn', function() {
+	  browser().navigateTo('../../app/#/login')
    	  login();	  
-	  expect(element('#userLoggedLink').attr('href')).toBe('#/users/1');	  	 
+	  expect(element('#username')).toHaveText('anfilbiblio');	  	 
     });
 	
 	it('debería no mostrar el username si no se ha hecho LogIn', function() {
@@ -60,12 +76,14 @@ describe('Garaje App', function() {
     });
 	
 	it('debería no mostrar ningun username si se ha hecho LogOut', function() {
+	  browser().navigateTo('../../app/#/login');
    	  login();
 	  logout();
 	  expect(element('#userLoggedLink').attr('href')).toBe('#/users/');	  	 	  
     });
 	
 	it('debería poder crearse un nuevo usuario si se pulsa SignUp', function() {
+	  browser().navigateTo('../../app/#/login');
 	  signup();
 	  expect(browser().location().url()).toBe('/users/new'); 	 	  
     });
@@ -119,7 +137,6 @@ describe('Garaje App', function() {
     });
 	
 	it('debería mostrar el boton de creacion de proyectos si se ha hecho login', function() {
-		browser().navigateTo('../../app/#/principal');
 		login();
 		browser().navigateTo('../../app/#/proyectos');
 		expect(element('#newProject').css("display")).not().toBe("none"); 	
@@ -195,16 +212,18 @@ describe('Garaje App', function() {
   describe('Vista de detalle del usuario', function() {
 
     beforeEach(function() {
-      browser().navigateTo('../../app/#/users/1');
+   	  login();
     });
 
-
     it('debería mostrar la página del user habiendo hecho login', function() {
-      expect(binding('proyecto.nombre')).toBe('proyecto1');
+	  browser().navigateTo('../../app/#/users/1');
+      expect(binding('user.username')).toBe('anfilbiblio');
     });
 
     it('debería no mostrar la página del user si no hemos hecho login', function() {
-      expect(binding('proyecto.nombre')).toBe('proyecto1');
+	  logout();
+	  browser().navigateTo('../../app/#/users/1');
+      expect(binding('user.username')).not().toBe('anfilbiblio');
     });
 
 
