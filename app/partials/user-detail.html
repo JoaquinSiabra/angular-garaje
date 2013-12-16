@@ -13,15 +13,17 @@
 <h2>{{user.username}}</h2>
 
 
- <div ng-show="esUsuarioPropietario()"> 
+ <div ng-show="esUsuarioCorrecto()"> 
 	<form novalidate class="simple-form">
 		Nombre: <input type="text" ng-model="user.nombre" /><br />
 		Apellidos: <input type="text" ng-model="user.apellidos" /><br />
 		Email: <input type="text" ng-model="user.email" /><br />
 		Bio: <textarea col="10" rows="5" style="resize:none" ng-model="user.bio" /></textarea><br />
 		Username: <input type="text" ng-model="user.username" /><br />		
-		Password: <input type="password" ng-model="user.password" /><br />			
-		<button ng-click="update();">SAVE</button><button ng-click="deletes();" go-click="/users">DELETE</button>
+		Password: <input type="password" ng-model="user.password" /><br />
+		<div class="col-sm-4" >			
+			<button class="btn btn btn-success btn-block" ng-click="update();">SAVE</button><button class="btn btn btn-danger btn-block" ng-click="deletes();" go-click="/users">DELETE</button>
+		</div>
 	</form>
 </div>
 

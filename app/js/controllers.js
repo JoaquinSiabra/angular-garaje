@@ -1,17 +1,19 @@
 'use strict';
 
-var garajeControllers = angular.module('garajeControllers', []);
+var garajeControllers = angular.module('garajeControllers', ['ngRoute']);
  
-garajeControllers.controller('SesionCtrl', ['$rootScope', '$scope','Sesion',
+garajeControllers.controller('SesionCtrl', ['$rootScope','$scope','Sesion',
   function($rootScope, $scope, Sesion) {
  
 	//Esto hay que mejorarlo
-  	$rootScope.userSesion = Sesion.userSesion;
+  	$rootScope.userSesion = Sesion.getUser();
 	$rootScope.logged = Sesion.logged;
 	$rootScope.logout = Sesion.logout;
 	$rootScope.login = Sesion.login;
+	$rootScope.loggedUser = Sesion.loggedUser;
 	
 	$scope.userLogging = {username: "", password:""};
+
 	
 }]);  
 
@@ -42,10 +44,13 @@ garajeControllers.controller('ProyectoNewCtrl', ['$scope','$routeParams', 'Proye
 }]);
 
    
-garajeControllers.controller('ProyectoDetailCtrl', ['$scope','$routeParams', 'Proyecto','Images','Image','Sesion','Colaborador',
-  function($scope, $routeParams, Proyecto, Images, Image,Sesion,Colaborador) {
+garajeControllers.controller('ProyectoDetailCtrl', ['$scope','$rootScope','$routeParams', 'Proyecto','Images','Image','Sesion','Colaborador',
+  function($scope, $rootScope,$routeParams, Proyecto, Images, Image,Sesion,Colaborador) {
+  
+	$scope.esUsuarioPropietario = false;
   
     $scope.proyecto = Proyecto.query({proyectoId: $routeParams.proyectoId}, function(proyecto) {
+		$scope.esUsuarioPropietario = ($scope.proyecto.propietario == Sesion.getUser());	
     });
 	
 	$scope.images = Images.query({proyectoId: $routeParams.proyectoId}, function(images) {
@@ -55,18 +60,16 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope','$routeParams', 'Pr
     $scope.setImage = function(imageUrl) {
       $scope.mainImageUrl = imageUrl;	  
     }
+		
+	//$scope.esUsuarioColaborador = Colaborador.query({proyectoId: $routeParams.proyectoId,userId:Sesion.getIdUser()});
 	
-	$scope.esUsuarioPropietario = function() {
-      return ($scope.proyecto.username == Sesion.getUser());	  
-    }
-	$scope.esUsuarioColaborador = function() {
-	  var esta = false;
-	  var colaborador;
-	  for (colaborador in $scope.proyecto.colaboradores) {
-		esta = esta || (colaborador.username == Sesion.getUser());
-	  }
-      return (esta);	  
-    }
+	$scope.esUsuarioSuspenso = function(colaborador) {
+		return colaborador.aceptado==0;
+	}
+	$scope.esUsuarioLogged = function(colaborador) {
+	alert($rootScope.loggedUser(colaborador.username));
+		return $rootScope.loggedUser(colaborador.username);
+	}
 	
 	$scope.colaborar= function() {
       Colaborador.create({proyectoId: $routeParams.proyectoId, userId: Sesion.getIdUser()}, function (){
@@ -74,9 +77,31 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope','$routeParams', 'Pr
 	  }); 
     }	
 	$scope.abandonar= function(posicion) {
-      Colaborador.remove({proyectoId: $routeParams.proyectoId, userId: Sesion.getIdUser()}, function (){
-			$scope.proyecto.colaboradores.splice(posicion,1);
+		if (confirm("¿Estás seguro?")) {
+		  Colaborador.remove({proyectoId: $routeParams.proyectoId, userId: Sesion.getIdUser()}, function (){
+				$scope.proyecto.colaboradores.splice(posicion,1);
+		  }); 
+		}
+    }	
+	
+	$scope.aceptar= function(idUser) {
+      Colaborador.accept({proyectoId: $routeParams.proyectoId, userId: idUser}, function (){
+			 $scope.proyecto = Proyecto.query({proyectoId: $routeParams.proyectoId});
 	  }); 
+    }	
+	
+	$scope.suspender= function(idUser) {
+      Colaborador.suspend({proyectoId: $routeParams.proyectoId, userId: idUser}, function (){
+			 $scope.proyecto = Proyecto.query({proyectoId: $routeParams.proyectoId});
+	  }); 
+    }
+	
+	$scope.rechazar= function(posicion) {
+		if (confirm("¿Estás seguro?")) {
+		  Colaborador.remove({proyectoId: $routeParams.proyectoId, userId: $scope.colaborador.idUser}, function (){
+				$scope.proyecto.colaboradores.splice(posicion,1);
+		  }); 
+		}
     }	
 	
 	$scope.update = function() {
@@ -90,7 +115,9 @@ garajeControllers.controller('ProyectoDetailCtrl', ['$scope','$routeParams', 'Pr
 	}	
 	
 	$scope.deletes = function() {
-		Proyecto.remove({proyectoId: $routeParams.proyectoId}); 
+		if (confirm("Se va a borrar el proyecto y toda la información asociada. ¿Continuo?")) {
+			Proyecto.remove({proyectoId: $routeParams.proyectoId}); 
+		}
 	}
 			
 }]);
@@ -138,8 +165,8 @@ garajeControllers.controller('UserDetailCtrl', ['$scope', '$rootScope','$routePa
       $scope.mainImageUrl = imageUrl;
     }
 	
-	$scope.esUsuarioPropietario= function() {
-      return ($scope.proyecto.username == Sesion.getUser());	  
+	$scope.esUsuarioCorrecto= function() {
+     return ($scope.user.username == Sesion.getUser());	  
     }
 	
 	$scope.update = function() {
@@ -149,7 +176,9 @@ garajeControllers.controller('UserDetailCtrl', ['$scope', '$rootScope','$routePa
 	}
 	
 	$scope.deletes = function() {
-		User.remove({userId: $routeParams.userId}); 
+		if (confirm("Se va a borrar el usuario. ¿Continuo?")) {
+			User.remove({userId: $routeParams.userId}); 
+		}
 	}
 	
 }]);

@@ -7,6 +7,7 @@ $app = new Slim();
 $app->get('/proyectos', 'getProyectos');
 $app->get('/proyectos/propietario/:id',	'getProyectosPropietario');
 $app->get('/proyectos/colaborador/:id',	'getProyectosColaborador');
+$app->get('/proyecto/:idProyecto/colaborador/:idUser','esColaboradorProyecto');
 $app->delete('/proyecto/:idProyecto/colaborador/:idUser','deleteColaboradorProyecto');
 $app->get('/proyecto/:id',	'getProyecto');
 $app->get('/imagenes/:id',	'getImagenes');
@@ -14,11 +15,35 @@ $app->get('/proyectos/search/:query', 'findByName');
 $app->post('/imagenes', 'addImage');
 $app->post('/proyecto', 'addProyecto');
 $app->put('/proyecto/:id', 'updateProyecto');
+$app->put('/proyecto/:idProyecto/colaborador/:idUser/aceptado/:aceptado','aceptacionColaborador');
 $app->delete('/proyecto/:id','deleteProyecto');
 $app->post('/proyecto/:idProyecto/colaborador/:idUser', 'addColaborador');
 
 $app->run();
 
+function aceptacionColaborador($idProyecto,$idUser,$aceptado) {
+	error_log('aceptacionColaborador\n', 3, 'php.log');
+	$request = Slim::getInstance()->request();
+	$colaborador = json_decode($request->getBody());
+	$sqlColaborador = "UPDATE garaje_proyecto_colaborador
+					   SET aceptado=:aceptado 
+					   WHERE idProyecto=:idProyecto AND idUser=:idUser";
+	
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sqlColaborador);  
+		$stmt->bindParam("idProyecto", $idProyecto);
+		$stmt->bindParam("idUser", $idUser);
+		$stmt->bindParam("aceptado", $aceptado);			
+		$stmt->execute();
+		
+		$db = null;
+		
+	} catch(PDOException $e) {
+		error_log($e->getMessage(), 3, 'php.log');
+		echo '{"error":{"text":'. $e->getMessage() .'}}'; 
+	}
+}
 
 
 function addColaborador($idProyecto,$idUser) {
@@ -127,7 +152,7 @@ function getProyecto($id) {
 			WHERE p.idProyecto = :id
 			AND o.idProyecto = p.idProyecto
 			AND o.idUser = u.idUser";
-	$sqlColaboradores = "SELECT u.idUser, u.username, u.email
+	$sqlColaboradores = "SELECT u.idUser, u.username, u.email, c.aceptado
 			FROM garaje_proyecto as p, garaje_proyecto_colaborador as c, garaje_user as u
 			WHERE p.idProyecto = :id
 			AND c.idProyecto = p.idProyecto

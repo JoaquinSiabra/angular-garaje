@@ -16,9 +16,9 @@
 			<li><a href="#/proyectos/">Proyectos</a></li>
 			<li><a href="#/users/">Usuarios</a></li>			    			
           </ul>	
-		  <div class="col-sm-4" >	
-			<button class="btn btn-link" ng-show="logged()" go-click="/user/area" style="margin-top:0.6em;" type="submit">Mi Area</button>	
-			<button id="logout" class="btn btn-danger" style="margin-top:0.6em;" type="submit"
+		  <div class="col-sm-6" >	
+			<button class="btn btn-link" ng-show="logged()" go-click="/user/area" style="margin-top:0.6em;" type="submit">Mi Area ({{userSesion.username}})</button>	
+			<button id="logout" class="btn btn-xs btn-danger" style="margin-top:0.6em;" type="submit"
 				  ng-show="logged()" ng-click="logout();" go-click="/portada">Log Out
 			</button>	
 			<li>				  
