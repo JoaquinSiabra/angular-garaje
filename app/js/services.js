@@ -22,7 +22,7 @@ garajeServices.factory('Proyecto', ['$resource',
   
   garajeServices.factory('Colaborador', ['$resource',
   function($resource){
-    return $resource('/garaje/api/proyectoAPI.php/proyecto/:proyectoId/colaborador/:userId/aceptado/:aceptado', {}, {
+    return $resource('/garaje/api/proyectoAPI.php/proyecto/:proyectoId/colaborador/:userId/:aceptado', {}, {
 	  query: {method:'GET', isArray: false},
 	  create: {method:'POST',params: {proyectoId: '@proyectoId', userId:'@userId'}},
       remove: {method:'DELETE', params: {proyectoId: '@proyectoId', userId:'@userId'}},
@@ -73,9 +73,7 @@ garajeServices.factory('Auth', ['$resource',
   
 garajeServices.factory('Sesion', ['$rootScope', 'Auth',
   function($rootScope, Auth) {
-	
-	//$rootScope.userSesion = angular.fromJson(localStorage.getItem('userSesion')) || {};
-	
+		
 	function getIdUser() {
 		return $rootScope.userSesion.idUser;
 	}
@@ -92,15 +90,16 @@ garajeServices.factory('Sesion', ['$rootScope', 'Auth',
 	}
 	
 	function loggedUser(username) {	
-		alert(username);	
-		return ($rootScope.userSesion.username==username);	
+		if (logged()){
+			return ($rootScope.userSesion.username===username);	
+		}
+		return false;
 	}
 	
 	function logout() {
 		localStorage.clear();
 		sessionStorage.clear();
-		$rootScope.userSesion = {};
-		window.location.reload(); //evita que se mantenga en sesion
+		$rootScope.userSesion = null;		
 	}
 	
 	function login(userLogging) {
@@ -110,13 +109,18 @@ garajeServices.factory('Sesion', ['$rootScope', 'Auth',
 		});
 	}	
 	
-	return {
-		//userSesion: userSesion,
+	function reload(){
+		window.location.reload();
+	}	
+	
+	return {	
 		logged: logged,
+		loggedUser: loggedUser,
 		logout: logout,
 		login: login,
 		getIdUser: getIdUser,
-		getUser: getUser
+		getUser: getUser,
+		reload: reload
 	};
 		
 }]);  
